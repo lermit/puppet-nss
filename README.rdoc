@@ -1,0 +1,78 @@
+= Puppet module: nss
+
+This is a Puppet module for nss based on the second generation layout ("NextGen") of Example42 Puppet Modules.
+
+Made by Romain THERRAT / Carpe-Hora
+
+Official site: http://www.example42.com
+
+Official git repository: http://github.com/lermit/puppet-nss
+
+Released under the terms of Apache 2 License.
+
+This module requires functions provided by the Example42 Puppi module (you need it even if you don't use and install Puppi)
+
+For detailed info about the logic and usage patterns of Example42 modules check the DOCS directory on Example42 main modules set.
+
+== USAGE - Basic management
+
+* Install nss with default settings
+
+        class { 'nss': }
+
+* Enable auditing without without making changes on existing nss configuration files
+
+        class { 'nss':
+          audit_only => true
+        }
+
+
+== USAGE - Overrides and Customizations
+* Use custom sources for main config file
+
+        class { 'nss':
+          source => [ "puppet:///modules/lab42/nss/nss.conf-${hostname}" , "puppet:///modules/lab42/nss/nss.conf" ],
+        }
+
+
+* Use custom template for main config file. Note that template and source arguments are alternative.
+
+        class { 'nss':
+          template => 'example42/nss/nss.conf.erb',
+        }
+
+* Automatically include a custom subclass
+
+        class { 'nss':
+          my_class => 'nss::example42',
+        }
+
+== USAGE - Add a directive into /etc/nsswitch.conf
+* Add a service for a specific database
+
+        nss::directive { "nss-ldap-passwd":
+          database => passwd,
+          service  => ldap,
+        }
+
+* Remove a service for a specific database
+
+        nss::directive { "nss-ldap-passwd":
+          database => passwd,
+          service  => ldap,
+          ensure   => absent,
+        }
+
+== USAGE - Example42 extensions management
+* Activate puppi (recommended, but disabled by default)
+
+        class { 'nss':
+          puppi    => true,
+        }
+
+* Activate puppi and use a custom puppi_helper template (to be provided separately with a puppi::helper define ) to customize the output of puppi commands
+
+        class { 'nss':
+          puppi        => true,
+          puppi_helper => 'myhelper',
+        }
