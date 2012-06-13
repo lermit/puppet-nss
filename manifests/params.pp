@@ -17,7 +17,7 @@ class nss::params {
   ### Application related parameters
 
   $config_file = $::operatingsystem ? {
-    default => '/etc/nss/nss.conf',
+    default => '/etc/nsswitch.conf',
   }
 
   $config_file_mode = $::operatingsystem ? {
