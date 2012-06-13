@@ -89,8 +89,11 @@ class nss (
   $config_file         = params_lookup( 'config_file' ),
   $config_file_mode    = params_lookup( 'config_file_mode' ),
   $config_file_owner   = params_lookup( 'config_file_owner' ),
-  $config_file_group   = params_lookup( 'config_file_group' )
+  $config_file_group   = params_lookup( 'config_file_group' ),
+  $audit_only          = params_lookup( 'audit_only' , 'global' )
   ) inherits nss::params {
+
+  $bool_audit_only=any2bool($audit_only)
 
   $manage_file_source = $nss::source ? {
     ''        => undef,
@@ -102,10 +105,16 @@ class nss (
     default   => template($nss::template),
   }
 
-  $manage_file_replace = $php::bool_audit_only ? {
+  $manage_audit = $php::bool_audit_only ? {
+    true  => 'all',
+    false => undef,
+  }
+
+  $manage_file_replace = $nss::bool_audit_only ? {
     true  => false,
     false => true,
   }
+
   ### Managed resources
   file { 'nss.conf':
     ensure  => $nss::manage_file,
