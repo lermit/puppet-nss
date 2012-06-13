@@ -105,7 +105,7 @@ class nss (
     default   => template($nss::template),
   }
 
-  $manage_audit = $php::bool_audit_only ? {
+  $manage_audit = $nss::bool_audit_only ? {
     true  => 'all',
     false => undef,
   }
